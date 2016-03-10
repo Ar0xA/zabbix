@@ -1,0 +1,6 @@
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+
+export PATH=$PATH:$HOME/bin:/usr/pgsql-<%= @dbversion %>/bin
+export PGDATA=<%= @datadir %>/<%= @instancename %>/pgdata
