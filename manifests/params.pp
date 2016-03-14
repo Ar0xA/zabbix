@@ -25,6 +25,11 @@
 #
 
 class zabbix::params (
+  #global
+  $manage_repo                    = true,
+  $repo_location                  = '',
+  $major_version                  = '2.4',
+  $minor_version                  = '5',
   #Zabbix-db
   $dbtype                         = 'postgresql',
   $dbversion                      = '9.4',
@@ -150,7 +155,7 @@ class zabbix::params (
   }
   case $::osfamily {
     'RedHat': {
-      $version          = '2.4.5'
+      $version          = "${major_version}.${minor_version}"
       $agent_config_dir = '/etc/zabbix'
       $agent_include    = "${agent_config_dir}/zabbix_agentd.d"
       $agent_logfile    = '/var/log/zabbix/zabbix_agentd.log'
@@ -159,7 +164,7 @@ class zabbix::params (
       $service_name     = 'zabbix-agent'
     }
     'windows': {
-      $version          = '2.4.4'
+      $version          = "${major_version}.4"
       $agent_config_dir = 'C:/ProgramData/zabbix'
       $agent_include    = "${agent_config_dir}/include"
       $agent_logfile    = 'C:/ProgramData/zabbix/zabbix_agentd.log'

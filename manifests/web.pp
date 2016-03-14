@@ -59,7 +59,7 @@ class zabbix::web (
   }
   package { 'zabbix-web-pgsql':
     ensure          => "${version}-1.${os_release}",
-    require         => Package['zabbix-web']
+    require         => [ Package['zabbix-web'], Class['zabbix::base'] ]
   }
   service { 'httpd':
     ensure  => running,

@@ -28,7 +28,7 @@ class zabbix::db (
       dport  => $dbport
     }
   }
-#  class { 'zabbix::db::env': }
+  class { 'zabbix::db::env': }
   class { 'zabbix::db::role': }
   class { 'zabbix::db::tablespaces': }
   class { 'zabbix::db::database': }

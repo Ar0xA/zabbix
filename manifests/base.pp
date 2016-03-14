@@ -16,7 +16,19 @@ class zabbix::base (
   $version = $zabbix::params::version
 ) inherits zabbix::params {
 
-#  package { 'zabbix':
-#    ensure   => "${version}-1.${os_release}"
-#  }
+# Only include the repo class if it has not yet been included
+  unless defined(Class['Zabbix::Repo']) {
+    class { '::zabbix::repo':
+      zabbix_version => $zabbix_version,
+      manage_repo    => $manage_repo,
+    }
+  }
+  case $::kernel {
+    'Linux': {
+      package { 'zabbix':
+        ensure  => "${version}-1.${os_release}",
+        require => Class['zabbix::repo']
+      }
+    }
+  }
 }

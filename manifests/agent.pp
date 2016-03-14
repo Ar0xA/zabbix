@@ -66,7 +66,8 @@ class zabbix::agent (
   Package {allow_virtual => false}
   package { 'zabbix-agent':
     ensure   => $package_ensure,
-    provider => $provider
+    provider => $provider,
+    require  => Class['zabbix::base']
   }
   service { $service_name:
     ensure     => running,

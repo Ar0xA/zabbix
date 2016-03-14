@@ -125,18 +125,13 @@ class zabbix::server (
 #    ensure   => present,
 #    require  => Package['zabbix']
 #  }
-  package { 'zabbix-server':
-    ensure          => "${version}-1.${os_release}",
-#    require         => [ Package['net-snmp'], Package['unixODBC'], Package['fping'], Package['iksemel'], Package['libssh2'] ]
-    require => Package['zabbix']
-  }
   package { 'zabbix-server-pgsql':
     ensure          => "${version}-1.${os_release}",
-    require         => Package['zabbix-server']
+    require         => Class['zabbix::base']
   }
   package { 'zabbix-get':
     ensure   => "${version}-1.${os_release}",
-    require  => Package['zabbix']
+    require         => Class['zabbix::base']
   }
   service { 'zabbix-server':
     ensure    => running,
@@ -152,10 +147,7 @@ class zabbix::server (
     group   => 'zabbix',
     replace => true,
     content => template("zabbix/${version}/zabbix_server.conf.erb"),
-    require => Package['zabbix-server']
-  }
-  class { 'zabbix::templates':
-    require => Class['zabbix::web']
+    require => Package['zabbix-server-pgsql']
   }
   create_resources('firewall', $iptable_entries)
 }

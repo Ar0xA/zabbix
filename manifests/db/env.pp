@@ -40,7 +40,7 @@ class zabbix::db::env (
     mode    => '0775',
     require => Class['lvm']
   }
-  if $is_virtual == 'true' {
+  if $is_virtual == true {
     if $virtual == 'virtualbox' {
       $db_disk="/dev/sdb"
     } else {

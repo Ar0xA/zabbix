@@ -48,7 +48,7 @@ class zabbix::java_gateway (
   }
   package { 'zabbix-java-gateway':
     ensure   => "${version}-1.${os_release}",
-    require  => [ Package['java-1.6.0-openjdk'], Package['zabbix'] ]
+    require  => [ Package['java-1.6.0-openjdk'], Class['zabbix::repo'] ]
   }
   service { 'zabbix-java-gateway':
     ensure    => running,

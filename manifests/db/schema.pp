@@ -19,11 +19,20 @@ class zabbix::db::schema (
   $dbport                     = $zabbix::db::dbport,
   $zabbix_version             = $zabbix::base::version
 ) {
+  #create empty file if it doesn't exist yet
+  file { '/var/lib/pgsql/.pgpass':
+    ensure  => present,
+    replace => 'no',
+    mode    => '0600',
+    owner   => 'postgres',
+    group   => 'postgres',
+    require => Class['postgresql::server']
+  }
   file_line { 'zabbix_pgpass':
     path    => '/var/lib/pgsql/.pgpass',
     line    => "${dbhost}:${dbport}:${dbname}:${dbuser}:${dbpassword}",
     before  => Exec['create_zabbix_schema'],
-    require => Class['postgresql::server']
+    require => File['/var/lib/pgsql/.pgpass']
   }
   exec { 'create_zabbix_schema':
     command => "psql --tuples-only --quiet -h ${dbhost} -d ${dbname} -U ${dbuser} -f /usr/share/doc/zabbix-server-pgsql-${zabbix_version}/create/schema.sql",
@@ -31,7 +40,7 @@ class zabbix::db::schema (
     user    => 'postgres',
     before  => File['db_schema'],
     creates => '/etc/zabbix/db_schema_created',
-    require => [ Package['zabbix-server'], Class['zabbix::db::database'] ]
+    require => [ Package['zabbix-server-pgsql'], Class['zabbix::db::database'] ]
   }
   exec { 'create_zabbix_images':
     command => "psql --tuples-only --quiet -h ${dbhost} -d ${dbname} -U ${dbuser} -f /usr/share/doc/zabbix-server-pgsql-${zabbix_version}/create/images.sql",
