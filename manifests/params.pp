@@ -26,7 +26,7 @@
 
 class zabbix::params (
   #global
-  $manage_repo                    = true,
+  $manage_repo                    = false,
   $repo_location                  = '',
   $major_version                  = '2.4',
   $minor_version                  = '5',
